@@ -6,6 +6,15 @@
 <title>💖 San Valentín 💖</title>
 
 <style>
+
+#contenedor {
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 120px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -36,9 +45,12 @@ button {
 }
 
 #no {
+    position: absolute;
     background-color: #333;
     color: white;
-    position: absolute;
+    left: 55%;
+    top: 0;
+    transform: translateX(0);
 }
 
 .resultado {
@@ -55,10 +67,27 @@ img {
 
 /* corazones */
 .heart {
-    position: fixed;
+    position: absolute;
     top: -10px;
     font-size: 24px;
     animation: fall linear forwards;
+}
+
+.confetti {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    top: -10px;
+    animation: confetti-fall linear forwards;
+    z-index: 9999;
+}
+
+@keyframes confetti-fall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
 }
 
 @keyframes fall {
@@ -67,19 +96,33 @@ img {
         opacity: 0;
     }
 }
+
+#botones {
+    position: relative;
+    height: 80px;
+    margin-top: 30px;
+}
+
+#si {
+    position: relative;
+    z-index: 2;
+}
+
 </style>
 </head>
 
 <body>
-
+<div id="contenedor">
 <audio id="musica" loop>
     <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
 <h1 id="titulo">💘 Celeste 💘<br>¿Quieres ser mi San Valentín?</h1>
 
-<button id="si" onclick="respuestaSi()">Sí 💕</button>
-<button id="no" onclick="respuestaNo()">No 😐</button>
+<div id="botones">
+    <button id="si" onclick="respuestaSi()">Sí 💕</button>
+    <button id="no" onclick="respuestaNo()">No 😐</button>
+</div>
 
 <div id="resultadoSi" class="resultado">
     <h2>🥰 Sabía que dirías que sí 🥰</h2>
@@ -103,6 +146,23 @@ const textosNo = [
     "Última oportunidad..."
 ];
 
+function lanzarConfeti() {
+    for (let i = 0; i < 80; i++) {
+        const confetti = document.createElement("div");
+        confetti.className = "confetti";
+
+        const colors = ["#ff2e63", "#ffd700", "#ffffff", "#ff7eb3"];
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + "s";
+
+        document.body.appendChild(confetti);
+
+        setTimeout(() => confetti.remove(), 4000);
+    }
+}
+
 function iniciarMusica() {
     const audio = document.getElementById("musica");
     if (audio.paused) {
@@ -114,6 +174,8 @@ function respuestaSi() {
     iniciarMusica();
     document.getElementById("resultadoSi").style.display = "block";
     document.getElementById("resultadoNo").style.display = "none";
+    document.getElementById("no").style.display = "none"; // 👈 ESTA
+    lanzarConfeti();
 }
 
 function respuestaNo() {
@@ -121,10 +183,18 @@ function respuestaNo() {
     const btn = document.getElementById("no");
     intentosNo++;
 
-    if (intentosNo <= 4) {
+    if (intentosNo <= textosNo.length) {
         btn.innerText = textosNo[intentosNo - 1];
-        btn.style.left = Math.random() * (window.innerWidth - btn.offsetWidth) + "px";
-        btn.style.top = Math.random() * (window.innerHeight - btn.offsetHeight) + "px";
+
+        const contenedor = document.getElementById("contenedor");
+        const maxX = contenedor.clientWidth - btn.offsetWidth - 20;
+        const maxY = contenedor.clientHeight - btn.offsetHeight - 150;
+
+        const x = Math.max(10, Math.random() * maxX);
+        const y = Math.max(80, Math.random() * maxY);
+
+        btn.style.left = x + "px";
+        btn.style.top = y + "px";
     } else {
         btn.style.display = "none";
         document.getElementById("resultadoNo").style.display = "block";
@@ -133,8 +203,12 @@ function respuestaNo() {
 
 function reiniciar() {
     intentosNo = 0;
-    document.getElementById("no").style.display = "inline-block";
-    document.getElementById("no").innerText = "No 😐";
+    const btn = document.getElementById("no");
+    btn.style.display = "inline-block";
+    btn.style.left = "50%";
+    btn.style.top = "auto";
+    btn.style.transform = "translateX(-50%)";
+    btn.innerText = "No 😐";
     document.getElementById("resultadoNo").style.display = "none";
     document.getElementById("resultadoSi").style.display = "none";
 }
@@ -145,12 +219,12 @@ function crearCorazon() {
     heart.innerHTML = "💖";
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
-    document.body.appendChild(heart);
+    document.getElementById("contenedor").appendChild(heart);
     setTimeout(() => heart.remove(), 5000);
 }
 
 setInterval(crearCorazon, 300);
 </script>
-
+</div>
 </body>
 </html>

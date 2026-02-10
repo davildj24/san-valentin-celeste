@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 San Valentín 💖</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+h1 {
+    margin-top: 60px;
+    font-size: 2.3em;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin: 20px;
+}
+
+#si {
+    background-color: #ff2e63;
+    color: white;
+}
+
+#no {
+    background-color: #333;
+    color: white;
+    position: absolute;
+}
+
+.resultado {
+    display: none;
+    margin-top: 30px;
+}
+
+img {
+    max-width: 280px;
+    border-radius: 20px;
+    margin-top: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* corazones */
+.heart {
+    position: fixed;
+    top: -10px;
+    font-size: 24px;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<audio autoplay loop>
+    <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<h1>💘 Celeste 💘<br>¿Quieres ser mi San Valentín?</h1>
+
+<button id="si" onclick="respuestaSi()">Sí 💕</button>
+<button id="no" onmouseover="moverNo()">No 😐</button>
+
+<div id="resultadoSi" class="resultado">
+    <h2>🥰 Gracias amor, sabía que dirías que sí 🥰</h2>
+    <p>Eres lo mejor que me ha pasado ❤️</p>
+    <img src="nosotros.jpg">
+</div>
+
+<div id="resultadoNo" class="resultado">
+    <h2>😼 Tengo secuestrado a tu gato...</h2>
+    <p>Piénsalo mejor 😈🐾</p>
+    <img src="gato.jpg">
+</div>
+
+<script>
+function respuestaSi() {
+    document.getElementById("resultadoSi").style.display = "block";
+    document.getElementById("resultadoNo").style.display = "none";
+}
+
+function moverNo() {
+    const btn = document.getElementById("no");
+    const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+    btn.style.left = x + "px";
+    btn.style.top = y + "px";
+}
+
+function crearCorazon() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 5000);
+}
+
+setInterval(crearCorazon, 300);
+</script>
+
+</body>
+</html>

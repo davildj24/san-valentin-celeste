@@ -8,7 +8,7 @@
 <style>
 body {
     margin: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #ff758c, #ff7eb3);
     text-align: center;
     color: white;
@@ -26,7 +26,7 @@ button {
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    margin: 20px;
+    margin: 15px;
 }
 
 #si {
@@ -71,39 +71,71 @@ img {
 
 <body>
 
-<audio autoplay loop>
+<audio id="musica" loop>
     <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
-<h1>💘 Celeste 💘<br>¿Quieres ser mi San Valentín?</h1>
+<h1 id="titulo">💘 Celeste 💘<br>¿Quieres ser mi San Valentín?</h1>
 
 <button id="si" onclick="respuestaSi()">Sí 💕</button>
-<button id="no" onmouseover="moverNo()">No 😐</button>
+<button id="no" onclick="respuestaNo()">No 😐</button>
 
 <div id="resultadoSi" class="resultado">
-    <h2>🥰 Gracias amor, sabía que dirías que sí 🥰</h2>
-    <p>Eres lo mejor que me ha pasado ❤️</p>
+    <h2>🥰 Sabía que dirías que sí 🥰</h2>
+    <p>Te amo muchísimo ❤️</p>
     <img src="nosotros.jpg">
 </div>
 
 <div id="resultadoNo" class="resultado">
-    <h2>😼 Tengo secuestrado a tu gato...</h2>
-    <p>Piénsalo mejor 😈🐾</p>
-    <img src="gato.jpg">
+    <h2>😼 Lo tengo secuestrado</h2>
+    <p>Dale en regresar para salvarlo 🐾</p>
+    <img src="gato.jpg"><br>
+    <button onclick="reiniciar()">⬅️ Regresar</button>
 </div>
 
 <script>
+let intentosNo = 0;
+const textosNo = [
+    "No 😐",
+    "¿Estás segura?",
+    "¿Segurísima?",
+    "Última oportunidad..."
+];
+
+function iniciarMusica() {
+    const audio = document.getElementById("musica");
+    if (audio.paused) {
+        audio.play();
+    }
+}
+
 function respuestaSi() {
+    iniciarMusica();
     document.getElementById("resultadoSi").style.display = "block";
     document.getElementById("resultadoNo").style.display = "none";
 }
 
-function moverNo() {
+function respuestaNo() {
+    iniciarMusica();
     const btn = document.getElementById("no");
-    const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-    btn.style.left = x + "px";
-    btn.style.top = y + "px";
+    intentosNo++;
+
+    if (intentosNo <= 4) {
+        btn.innerText = textosNo[intentosNo - 1];
+        btn.style.left = Math.random() * (window.innerWidth - btn.offsetWidth) + "px";
+        btn.style.top = Math.random() * (window.innerHeight - btn.offsetHeight) + "px";
+    } else {
+        btn.style.display = "none";
+        document.getElementById("resultadoNo").style.display = "block";
+    }
+}
+
+function reiniciar() {
+    intentosNo = 0;
+    document.getElementById("no").style.display = "inline-block";
+    document.getElementById("no").innerText = "No 😐";
+    document.getElementById("resultadoNo").style.display = "none";
+    document.getElementById("resultadoSi").style.display = "none";
 }
 
 function crearCorazon() {
@@ -113,7 +145,6 @@ function crearCorazon() {
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 5000);
 }
 
